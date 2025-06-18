@@ -1,0 +1,6 @@
+fastapi
+uvicorn
+PyPDF2
+scikit-learn
+numpy
+python-multipart
