@@ -5,7 +5,7 @@ from ai_engine import AIEngine
 
 app = FastAPI()
 
-# Enable CORS
+# Enable CORS (access from mobile/Flutter app)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -14,12 +14,16 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Initialize AI engine
+engine = AIEngine(data_folder="data")
+
+# Input model
 class Query(BaseModel):
     question: str
-    subject: str  # 👈 Accept subject
+    subject: str
 
+# Ask endpoint
 @app.post("/ask")
 async def ask_question(query: Query):
-    engine = AIEngine(data_folder=f"data/{query.subject.lower()}")
-    answer = engine.get_answer(query.question)
+    answer = engine.get_answer(query.question, query.subject)
     return {"answer": answer}
