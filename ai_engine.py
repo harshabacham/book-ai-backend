@@ -5,34 +5,36 @@ from sklearn.metrics.pairwise import cosine_similarity
 
 class AIEngine:
     def __init__(self, data_folder="data"):
-        self.subject_data = {}
-        self.load_all_subjects(data_folder)
+        self.data_folder = data_folder
+        self.subject_chunks = {}  # Dictionary for subject-wise chunks
+        self.load_all_subjects()
 
-    def load_all_subjects(self, data_folder):
-        if not os.path.exists(data_folder):
-            print(f"[WARNING] Data folder '{data_folder}' not found.")
+    def load_all_subjects(self):
+        if not os.path.exists(self.data_folder):
+            print(f"[WARNING] Data folder '{self.data_folder}' not found.")
             return
 
-        for subject in os.listdir(data_folder):
-            subject_path = os.path.join(data_folder, subject)
+        for subject in os.listdir(self.data_folder):
+            subject_path = os.path.join(self.data_folder, subject)
             if os.path.isdir(subject_path):
                 chunks = []
                 for file in os.listdir(subject_path):
                     if file.endswith(".pdf"):
-                        file_path = os.path.join(subject_path, file)
-                        text = self.extract_text_from_pdf(file_path)
+                        pdf_path = os.path.join(subject_path, file)
+                        print(f"[INFO] Loading PDF: {pdf_path}")
+                        text = self.extract_text_from_pdf(pdf_path)
                         chunks.extend(self.split_text(text))
-                self.subject_data[subject.lower()] = chunks
-                print(f"[INFO] Loaded {len(chunks)} chunks for subject '{subject}'")
+                self.subject_chunks[subject.lower()] = chunks
+                print(f"[INFO] Loaded {len(chunks)} chunks for subject: {subject}")
 
     def extract_text_from_pdf(self, file_path):
         text = ""
         with open(file_path, "rb") as f:
             reader = PyPDF2.PdfReader(f)
             for page in reader.pages:
-                page_text = page.extract_text()
-                if page_text:
-                    text += page_text + "\n"
+                extracted = page.extract_text()
+                if extracted:
+                    text += extracted + "\n"
         return text
 
     def split_text(self, text, chunk_size=300):
@@ -49,14 +51,18 @@ class AIEngine:
         return chunks
 
     def get_answer(self, question: str, subject: str) -> str:
-        chunks = self.subject_data.get(subject.lower())
-        if not chunks:
-            return "📄 No content found for this subject."
+        subject = subject.lower()
+        if subject not in self.subject_chunks or not self.subject_chunks[subject]:
+            return f"📄 No PDF content found for subject '{subject}'."
 
+        chunks = self.subject_chunks[subject]
         vectorizer = TfidfVectorizer().fit_transform([question] + chunks)
         cosine_similarities = cosine_similarity(vectorizer[0:1], vectorizer[1:]).flatten()
+
         top_match_index = cosine_similarities.argmax()
         top_score = cosine_similarities[top_match_index]
+
+        print(f"[DEBUG] Top match score: {top_score:.2f}")
 
         if top_score < 0.1:
             return "🤖 Sorry, I couldn't find an answer related to your question."

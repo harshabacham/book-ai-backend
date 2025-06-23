@@ -1,11 +1,11 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from ai_engine import AIEngine
 
 app = FastAPI()
 
-# Enable CORS (access from mobile/Flutter app)
+# Allow frontend access
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -14,15 +14,12 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Initialize AI engine
 engine = AIEngine(data_folder="data")
 
-# Input model
 class Query(BaseModel):
     question: str
     subject: str
 
-# Ask endpoint
 @app.post("/ask")
 async def ask_question(query: Query):
     answer = engine.get_answer(query.question, query.subject)
