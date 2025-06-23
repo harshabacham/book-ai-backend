@@ -1,9 +1,11 @@
-from fastapi import FastAPI, Request
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
 from ai_engine import AIEngine
 
 app = FastAPI()
 
+# Enable CORS
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -12,15 +14,12 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-ai_engine = AIEngine(data_folder="data")
-
-@app.get("/")
-def read_root():
-    return {"message": "✅ AI Exam PDF Backend is Running!"}
+class Query(BaseModel):
+    question: str
+    subject: str  # 👈 Accept subject
 
 @app.post("/ask")
-async def ask_question(request: Request):
-    data = await request.json()
-    question = data.get("question")
-    answer = ai_engine.get_answer(question)
+async def ask_question(query: Query):
+    engine = AIEngine(data_folder=f"data/{query.subject.lower()}")
+    answer = engine.get_answer(query.question)
     return {"answer": answer}
