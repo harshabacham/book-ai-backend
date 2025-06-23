@@ -61,7 +61,7 @@ class AIEngine:
         top_match_index = cosine_similarities.argmax()
         top_score = cosine_similarities[top_match_index]
 
-        if top_score < 0.2:
+        if top_score < 0.1:
             return "🤖 Sorry, I couldn't find a relevant answer."
 
         return chunks[top_match_index]
