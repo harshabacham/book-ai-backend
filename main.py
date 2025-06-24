@@ -1,10 +1,12 @@
-from fastapi import FastAPI
+# main.py
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from ai_engine import AIEngine
 
 app = FastAPI()
 
+# CORS setup for frontend
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],

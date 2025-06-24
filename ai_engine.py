@@ -5,25 +5,25 @@ from sklearn.metrics.pairwise import cosine_similarity
 
 class AIEngine:
     def __init__(self, data_folder="data"):
-        self.data_folder = data_folder
         self.subject_chunks = {}
+        self.load_data(data_folder)
 
-    def load_subject(self, subject):
-        folder_path = os.path.join(self.data_folder, subject)
+    def load_data(self, folder_path):
         if not os.path.exists(folder_path):
-            print(f"[WARNING] No folder found for subject '{subject}'")
+            print(f"[WARNING] Data folder '{folder_path}' not found. Skipping load_data.")
             return
 
-        chunks = []
-        for file in os.listdir(folder_path):
-            if file.endswith(".pdf"):
-                path = os.path.join(folder_path, file)
-                print(f"[INFO] Loading: {path}")
-                text = self.extract_text_from_pdf(path)
-                chunks.extend(self.split_text(text))
-
-        self.subject_chunks[subject] = chunks
-        print(f"[INFO] Loaded {len(chunks)} chunks for '{subject}'")
+        for subject in os.listdir(folder_path):
+            subject_path = os.path.join(folder_path, subject)
+            if os.path.isdir(subject_path):
+                all_chunks = []
+                for file in os.listdir(subject_path):
+                    if file.endswith(".pdf"):
+                        pdf_path = os.path.join(subject_path, file)
+                        text = self.extract_text_from_pdf(pdf_path)
+                        chunks = self.split_text(text)
+                        all_chunks.extend(chunks)
+                self.subject_chunks[subject.lower()] = all_chunks
 
     def extract_text_from_pdf(self, file_path):
         text = ""
@@ -48,20 +48,17 @@ class AIEngine:
             chunks.append(current.strip())
         return chunks
 
-    def get_answer(self, question: str, subject: str) -> str:
-        if subject not in self.subject_chunks:
-            self.load_subject(subject)
-
-        chunks = self.subject_chunks.get(subject, [])
-        if not chunks:
+    def get_answer(self, question: str, subject: str = "general") -> str:
+        subject_chunks = self.subject_chunks.get(subject.lower())
+        if not subject_chunks:
             return f"📄 No PDF content found for subject '{subject}'."
 
-        vectorizer = TfidfVectorizer().fit_transform([question] + chunks)
-        similarities = cosine_similarity(vectorizer[0:1], vectorizer[1:]).flatten()
-        best_index = similarities.argmax()
-        best_score = similarities[best_index]
+        vectorizer = TfidfVectorizer().fit_transform([question] + subject_chunks)
+        cosine_similarities = cosine_similarity(vectorizer[0:1], vectorizer[1:]).flatten()
+        top_match_index = cosine_similarities.argmax()
+        top_score = cosine_similarities[top_match_index]
 
-        if best_score < 0.1:
+        if top_score < 0.15:
             return "🤖 Sorry, I couldn't find an answer related to your question."
 
-        return chunks[best_index]
+        return subject_chunks[top_match_index]
