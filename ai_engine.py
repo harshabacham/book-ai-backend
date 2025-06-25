@@ -1,11 +1,17 @@
+# ai_engine.py (Updated with sentence-transformers + faiss)
+
 import os
 import PyPDF2
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.metrics.pairwise import cosine_similarity
+import faiss
+import numpy as np
+from sentence_transformers import SentenceTransformer
 
 class AIEngine:
     def __init__(self, data_folder="data"):
-        self.subject_chunks = {}
+        self.model = SentenceTransformer("all-MiniLM-L6-v2")  # Free and fast
+        self.subject_index = {}  # {subject: FAISS index}
+        self.subject_chunks = {}  # {subject: [text chunks]}
+        self.subject_embeddings = {}  # {subject: [embeddings array]}
         self.load_data(data_folder)
 
     def load_data(self, folder_path):
@@ -16,14 +22,20 @@ class AIEngine:
         for subject in os.listdir(folder_path):
             subject_path = os.path.join(folder_path, subject)
             if os.path.isdir(subject_path):
-                all_chunks = []
+                chunks = []
                 for file in os.listdir(subject_path):
                     if file.endswith(".pdf"):
                         pdf_path = os.path.join(subject_path, file)
                         text = self.extract_text_from_pdf(pdf_path)
-                        chunks = self.split_text(text)
-                        all_chunks.extend(chunks)
-                self.subject_chunks[subject.lower()] = all_chunks
+                        chunks.extend(self.split_text(text))
+                if not chunks:
+                    continue
+                self.subject_chunks[subject] = chunks
+                embeddings = self.model.encode(chunks)
+                self.subject_embeddings[subject] = embeddings
+                index = faiss.IndexFlatL2(embeddings.shape[1])
+                index.add(np.array(embeddings))
+                self.subject_index[subject] = index
 
     def extract_text_from_pdf(self, file_path):
         text = ""
@@ -49,16 +61,16 @@ class AIEngine:
         return chunks
 
     def get_answer(self, question: str, subject: str = "general") -> str:
-        subject_chunks = self.subject_chunks.get(subject.lower())
-        if not subject_chunks:
+        subject = subject.lower()
+        if subject not in self.subject_index:
             return f"📄 No PDF content found for subject '{subject}'."
 
-        vectorizer = TfidfVectorizer().fit_transform([question] + subject_chunks)
-        cosine_similarities = cosine_similarity(vectorizer[0:1], vectorizer[1:]).flatten()
-        top_match_index = cosine_similarities.argmax()
-        top_score = cosine_similarities[top_match_index]
+        question_embedding = self.model.encode([question])
+        D, I = self.subject_index[subject].search(np.array(question_embedding), k=1)
+        best_match_index = I[0][0]
+        score = D[0][0]
 
-        if top_score < 0.15:
+        if score > 1.5:  # L2 distance threshold (lower is better)
             return "🤖 Sorry, I couldn't find an answer related to your question."
 
-        return subject_chunks[top_match_index]
+        return self.subject_chunks[subject][best_match_index]

@@ -7,3 +7,5 @@ python-multipart
 langchain
 tiktoken
 openai
+sentence-transformers
+faiss-cpu
