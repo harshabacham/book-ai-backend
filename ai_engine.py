@@ -1,5 +1,3 @@
-# ai_engine.py (Updated with sentence-transformers + faiss)
-
 import os
 import PyPDF2
 import faiss
@@ -8,10 +6,10 @@ from sentence_transformers import SentenceTransformer
 
 class AIEngine:
     def __init__(self, data_folder="data"):
-        self.model = SentenceTransformer("all-MiniLM-L6-v2")  # Free and fast
-        self.subject_index = {}  # {subject: FAISS index}
-        self.subject_chunks = {}  # {subject: [text chunks]}
-        self.subject_embeddings = {}  # {subject: [embeddings array]}
+        self.model = SentenceTransformer("all-MiniLM-L6-v2")
+        self.subject_index = {}
+        self.subject_chunks = {}
+        self.subject_embeddings = {}
         self.load_data(data_folder)
 
     def load_data(self, folder_path):
@@ -66,11 +64,15 @@ class AIEngine:
             return f"📄 No PDF content found for subject '{subject}'."
 
         question_embedding = self.model.encode([question])
-        D, I = self.subject_index[subject].search(np.array(question_embedding), k=1)
-        best_match_index = I[0][0]
-        score = D[0][0]
+        D, I = self.subject_index[subject].search(np.array(question_embedding), k=3)
 
-        if score > 1.5:  # L2 distance threshold (lower is better)
+        answers = []
+        for idx, dist in zip(I[0], D[0]):
+            if dist < 1.2:  # Lower is better, 1.2 is a good threshold
+                answers.append(self.subject_chunks[subject][idx])
+
+        if not answers:
             return "🤖 Sorry, I couldn't find an answer related to your question."
 
-        return self.subject_chunks[subject][best_match_index]
+        response = " ".join(answers[:2]).strip()
+        return response[:400] + "..." if len(response) > 400 else response
