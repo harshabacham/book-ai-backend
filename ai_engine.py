@@ -7,33 +7,34 @@ from sentence_transformers import SentenceTransformer
 class AIEngine:
     def __init__(self, data_folder="data"):
         self.model = SentenceTransformer("all-MiniLM-L6-v2")
-        self.subject_index = {}
-        self.subject_chunks = {}
-        self.subject_embeddings = {}
+        self.subject_index = {}  # {subject: FAISS index}
+        self.subject_texts = {}  # {subject: [chunk1, chunk2, ...]}
         self.load_data(data_folder)
 
     def load_data(self, folder_path):
         if not os.path.exists(folder_path):
-            print(f"[WARNING] Data folder '{folder_path}' not found. Skipping load_data.")
+            print(f"[WARNING] Data folder '{folder_path}' not found.")
             return
 
         for subject in os.listdir(folder_path):
             subject_path = os.path.join(folder_path, subject)
             if os.path.isdir(subject_path):
-                chunks = []
+                all_chunks = []
                 for file in os.listdir(subject_path):
                     if file.endswith(".pdf"):
                         pdf_path = os.path.join(subject_path, file)
                         text = self.extract_text_from_pdf(pdf_path)
-                        chunks.extend(self.split_text(text))
-                if not chunks:
+                        all_chunks.extend(self.split_text(text))
+
+                if not all_chunks:
                     continue
-                self.subject_chunks[subject] = chunks
-                embeddings = self.model.encode(chunks)
-                self.subject_embeddings[subject] = embeddings
-                index = faiss.IndexFlatL2(embeddings.shape[1])
+
+                embeddings = self.model.encode(all_chunks, show_progress_bar=False, batch_size=8)
+                index = faiss.IndexFlatL2(embeddings[0].shape[0])
                 index.add(np.array(embeddings))
+
                 self.subject_index[subject] = index
+                self.subject_texts[subject] = all_chunks  # Keep only chunks, not embeddings
 
     def extract_text_from_pdf(self, file_path):
         text = ""
@@ -64,15 +65,15 @@ class AIEngine:
             return f"📄 No PDF content found for subject '{subject}'."
 
         question_embedding = self.model.encode([question])
-        D, I = self.subject_index[subject].search(np.array(question_embedding), k=3)
+        D, I = self.subject_index[subject].search(np.array(question_embedding), k=2)
 
         answers = []
         for idx, dist in zip(I[0], D[0]):
-            if dist < 1.2:  # Lower is better, 1.2 is a good threshold
-                answers.append(self.subject_chunks[subject][idx])
+            if dist < 1.2:
+                answers.append(self.subject_texts[subject][idx])
 
         if not answers:
             return "🤖 Sorry, I couldn't find an answer related to your question."
 
-        response = " ".join(answers[:2]).strip()
-        return response[:400] + "..." if len(response) > 400 else response
+        result = " ".join(answers).strip()
+        return result[:400] + "..." if len(result) > 400 else result
