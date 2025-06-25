@@ -19,22 +19,17 @@ class AIEngine:
         for subject in os.listdir(folder_path):
             subject_path = os.path.join(folder_path, subject)
             if os.path.isdir(subject_path):
+                print(f"[INFO] Loading subject: {subject}")
                 all_chunks = []
                 for file in os.listdir(subject_path):
                     if file.endswith(".pdf"):
+                        print(f"[INFO] Reading: {file}")
                         pdf_path = os.path.join(subject_path, file)
                         text = self.extract_text_from_pdf(pdf_path)
                         all_chunks.extend(self.split_text(text))
 
-                if not all_chunks:
-                    continue
-
-                embeddings = self.model.encode(all_chunks, show_progress_bar=False, batch_size=8)
-                index = faiss.IndexFlatL2(embeddings[0].shape[0])
-                index.add(np.array(embeddings))
-
-                self.subject_index[subject] = index
-                self.subject_texts[subject] = all_chunks  # Keep only chunks, not embeddings
+                print(f"[INFO] Loaded {len(all_chunks)} chunks for {subject}")
+                ...
 
     def extract_text_from_pdf(self, file_path):
         text = ""
