@@ -6,8 +6,8 @@ uvicorn[standard]==0.24.0
 pypdf==3.17.1  # Newer maintained fork of PyPDF2
 
 # Machine learning and vectorization
-scikit-learn==1.4.0
-numpy==1.26.0
+scikit-learn==1.3.2
+numpy==1.25.2
 sentence-transformers==2.2.2
 faiss-cpu==1.7.4  # Kept same as newer versions may need CUDA
 
