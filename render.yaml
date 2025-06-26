@@ -9,7 +9,7 @@ services:
     healthCheckPath: /health
     envVars:
       - key: PYTHON_VERSION
-        value: "3.10"  # Changed from 3.13 to 3.11 for better compatibility
+        value: "3.11"  # Changed from 3.13 to 3.11 for better compatibility
       - key: PORT
         value: "10000"
       - key: ENVIRONMENT
