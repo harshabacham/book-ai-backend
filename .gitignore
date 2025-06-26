@@ -61,4 +61,4 @@ logs/
 
 # Large files (uncomment if your PDFs are very large)
 # *.pdf
-# data/
+# data/.venv/
