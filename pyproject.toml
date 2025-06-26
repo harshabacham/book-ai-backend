@@ -1,3 +1,26 @@
 [build-system]
-requires = ["setuptools>=70.0.0", "wheel>=0.43.0", "Cython>=3.0.10"]
+requires = ["setuptools>=70.0.0", "wheel>=0.43.0", "Cython>=3.0.10", "poetry-core>=1.0.0"]
 build-backend = "setuptools.build_meta"
+
+[tool.poetry]
+name = "book-ai-backend"
+version = "0.1.0"
+description = "Your project description"
+authors = ["Your Name <your.email@example.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.13"
+fastapi = "^0.109.2"
+uvicorn = "^0.27.0"
+joblib = "^1.5.1"
+numpy = "^2.3.1"
+scikit-learn = "^1.7.0"
+scipy = "^1.16.0"
+threadpoolctl = "^3.6.0"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.1.1"  # Optional: for testing
+
+[project.urls]
+Homepage = "https://github.com/harshabacham/book-ai-backend"
