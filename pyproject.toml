@@ -1,14 +1,10 @@
-[build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
-
 [tool.poetry]
 name = "book-ai-backend"
 version = "0.1.0"
-description = "Backend for Book AI application"
-authors = ["Your Name <your.email@example.com>"]
-license = "MIT"
+description = "Backend service for Book AI application"
+authors = ["harshabacham <you@example.com>"]
 readme = "README.md"
+packages = [{include = "book_ai_backend"}]
 
 [tool.poetry.dependencies]
 python = "^3.13"
@@ -20,8 +16,6 @@ scikit-learn = "^1.7.0"
 scipy = "^1.16.0"
 threadpoolctl = "^3.6.0"
 
-[tool.poetry.group.dev.dependencies]
-pytest = "^8.1.1"
-
-[project.urls]
-Homepage = "https://github.com/harshabacham/book-ai-backend"
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
