@@ -1,13 +1,17 @@
-# main.py
 from fastapi import FastAPI, Request, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
+from pydantic import BaseModel, field_validator
 from typing import Optional
 from ai_engine import AIEngine
+import logging
+
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 app = FastAPI(title="Book AI Backend", version="1.0.0")
 
-# CORS setup for frontend
+# CORS setup
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -17,22 +21,39 @@ app.add_middleware(
 )
 
 # Initialize AI Engine
-print("Initializing AI Engine...")
-engine = AIEngine()
-print("AI Engine initialized successfully!")
+logger.info("Initializing AI Engine...")
+try:
+    engine = AIEngine()
+    logger.info("AI Engine initialized successfully!")
+except Exception as e:
+    logger.error(f"Failed to initialize AI Engine: {e}")
+    raise
 
 class Query(BaseModel):
     question: str
     subject: str
     exam: Optional[str] = None
 
+    @field_validator('question', 'subject')
+    def validate_not_empty(cls, v):
+        if not v or not v.strip():
+            raise ValueError("Field cannot be empty")
+        return v.strip()
+
 class HealthResponse(BaseModel):
     status: str
     message: str
+    subjects: Optional[list] = None
 
 @app.get("/", response_model=HealthResponse)
 async def root():
-    return {"status": "healthy", "message": "Book AI Backend is running!"}
+    return {
+        "status": "healthy",
+        "message": "Book AI Backend is running!",
+        "subjects": engine.list_available_subjects()
+    }
+
+# ... rest of the endpoints remain the same but add more logging ...
 
 @app.get("/health", response_model=HealthResponse)
 async def health_check():

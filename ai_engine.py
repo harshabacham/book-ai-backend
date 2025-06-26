@@ -1,60 +1,82 @@
 import os
-import PyPDF2
+import pypdf  # Changed from PyPDF2
 import numpy as np
 import faiss
 from sentence_transformers import SentenceTransformer
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
+from typing import Dict, List, Optional
 
 class AIEngine:
-    def __init__(self, data_folder="data"):
-        self.subject_chunks = {}
-        self.subject_embeddings = {}
-        self.subject_index = {}
-        # Initialize the sentence transformer model
+    def __init__(self, data_folder: str = "data"):
+        self.subject_chunks: Dict[str, List[str]] = {}
+        self.subject_embeddings: Dict[str, np.ndarray] = {}
+        self.subject_index: Dict[str, faiss.Index] = {}
         self.model = SentenceTransformer('all-MiniLM-L6-v2')
         self.load_data(data_folder)
 
-    def load_data(self, folder_path):
+    def load_data(self, folder_path: str) -> None:
         if not os.path.exists(folder_path):
             print(f"[WARNING] Data folder '{folder_path}' not found. Skipping load_data.")
             return
 
-        for exam in os.listdir(folder_path):
-            exam_path = os.path.join(folder_path, exam)
-            if os.path.isdir(exam_path):
-                for subject in os.listdir(exam_path):
-                    subject_path = os.path.join(exam_path, subject)
-                    if os.path.isdir(subject_path):
-                        chunks = []
-                        for file in os.listdir(subject_path):
-                            if file.endswith(".pdf"):
-                                pdf_path = os.path.join(subject_path, file)
-                                text = self.extract_text_from_pdf(pdf_path)
-                                chunks.extend(self.split_text(text))
-                        if not chunks:
-                            continue
-                        key = f"{exam.lower()}_{subject.lower()}"
-                        self.subject_chunks[key] = chunks
-                        embeddings = self.model.encode(chunks)
-                        self.subject_embeddings[key] = embeddings
-                        index = faiss.IndexFlatL2(embeddings.shape[1])
-                        index.add(np.array(embeddings))
-                        self.subject_index[key] = index
-                        print(f"Loaded {len(chunks)} chunks for {key}")
+        try:
+            for exam in os.listdir(folder_path):
+                exam_path = os.path.join(folder_path, exam)
+                if os.path.isdir(exam_path):
+                    for subject in os.listdir(exam_path):
+                        subject_path = os.path.join(exam_path, subject)
+                        if os.path.isdir(subject_path):
+                            self._process_subject(exam, subject, subject_path)
+        except Exception as e:
+            print(f"Error loading data: {e}")
 
-    def extract_text_from_pdf(self, file_path):
+    def _process_subject(self, exam: str, subject: str, subject_path: str) -> None:
+        chunks = []
+        for file in os.listdir(subject_path):
+            if file.endswith(".pdf"):
+                pdf_path = os.path.join(subject_path, file)
+                try:
+                    text = self.extract_text_from_pdf(pdf_path)
+                    chunks.extend(self.split_text(text))
+                except Exception as e:
+                    print(f"Error processing {pdf_path}: {e}")
+        
+        if not chunks:
+            return
+
+        key = f"{exam.lower()}_{subject.lower()}"
+        self.subject_chunks[key] = chunks
+        
+        try:
+            embeddings = self.model.encode(chunks)
+            self.subject_embeddings[key] = embeddings
+            
+            index = faiss.IndexFlatL2(embeddings.shape[1])
+            index.add(np.array(embeddings).astype('float32'))  # Explicit float32
+            self.subject_index[key] = index
+            print(f"Loaded {len(chunks)} chunks for {key}")
+        except Exception as e:
+            print(f"Error creating embeddings/index for {key}: {e}")
+            # Remove failed entries
+            self.subject_chunks.pop(key, None)
+            self.subject_embeddings.pop(key, None)
+
+    def extract_text_from_pdf(self, file_path: str) -> str:
         text = ""
         try:
             with open(file_path, "rb") as f:
-                reader = PyPDF2.PdfReader(f)
+                reader = pypdf.PdfReader(f)
                 for page in reader.pages:
                     page_text = page.extract_text()
                     if page_text:
                         text += page_text + "\n"
         except Exception as e:
             print(f"Error reading PDF {file_path}: {e}")
+            raise
         return text
+
+    # ... rest of the methods remain the same but add type hints ...
 
     def split_text(self, text, chunk_size=300):
         sentences = text.split(". ")
