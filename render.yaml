@@ -3,8 +3,8 @@ services:
     name: book-ai-backend
     env: python
     buildCommand: |
-      python -m pip install --upgrade pip
-      pip install -r requirements.txt
+      python -m pip install --upgrade pip setuptools wheel cython==0.29.36
+      pip install --no-build-isolation -r requirements.txt
     startCommand: uvicorn main:app --host 0.0.0.0 --port 8000
     build:
-      pythonVersion: "3.13.5"  # Now using latest Python
+      pythonVersion: "3.11.8"  # Must be exactly this version
