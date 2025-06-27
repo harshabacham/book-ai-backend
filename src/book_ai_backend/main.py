@@ -32,15 +32,15 @@ engine = None
 
 @app.on_event("startup")
 async def startup_event():
-    """Initialize AI Engine on startup"""
+    """Initialize with minimal memory footprint"""
     global engine
     try:
-        logger.info("Initializing AI Engine...")
-        engine = AIEngine()
-        logger.info("AI Engine initialized successfully!")
+        logger.info("Initializing lightweight AI Engine...")
+        engine = AIEngine()  # This will now use TF-IDF
+        logger.info("AI Engine ready (TF-IDF mode)")
     except Exception as e:
         logger.error(f"Failed to initialize AI Engine: {e}")
-        raise e
+        raise
 
 
 class Query(BaseModel):

@@ -1,40 +1,25 @@
 import os
 import gc
-import pypdf
 import numpy as np
-import faiss
 from typing import Dict, List, Optional
-from sentence_transformers import SentenceTransformer
 import logging
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
+import pypdf
 
-# Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 class AIEngine:
     def __init__(self, data_folder: str = "data"):
-        """Initialize with a lightweight model and lazy loading"""
-        self.subject_chunks: Dict[str, List[str]] = {}
-        self.subject_embeddings: Dict[str, np.ndarray] = {}
-        self.subject_index: Dict[str, faiss.Index] = {}
-        self.model = None  # Will be loaded on first use
-        self.model_name = "paraphrase-MiniLM-L3-v2"  # 128-dim instead of 384-dim
+        """Initialize with TF-IDF instead of heavy embeddings"""
+        self.vectorizers: Dict[str, TfidfVectorizer] = {}
+        self.subject_texts: Dict[str, List[str]] = {}
         self.load_data(data_folder)
-
-    def load_model(self):
-        """Lazy load the model to conserve memory"""
-        if self.model is None:
-            logger.info(f"Loading lightweight model: {self.model_name}")
-            try:
-                self.model = SentenceTransformer(self.model_name, device='cpu')
-                # Reduce memory usage immediately
-                self.model.max_seq_length = 128  # Reduce from default 256
-            except Exception as e:
-                logger.error(f"Failed to load model: {e}")
-                raise
+        logger.info("AI Engine initialized with TF-IDF")
 
     def load_data(self, folder_path: str) -> None:
-        """Load and process data with memory optimizations"""
+        """Load data using memory-efficient approach"""
         if not os.path.exists(folder_path):
             logger.warning(f"Data folder '{folder_path}' not found")
             return
@@ -52,76 +37,36 @@ class AIEngine:
             logger.error(f"Error loading data: {e}")
 
     def _process_subject(self, exam: str, subject: str, subject_path: str) -> None:
-        """Process a single subject with memory safeguards"""
-        chunks = []
+        """Process subject documents with TF-IDF"""
+        texts = []
         for file in os.listdir(subject_path):
             if file.endswith(".pdf"):
-                pdf_path = os.path.join(subject_path, file)
                 try:
-                    text = self.extract_text_from_pdf(pdf_path)
-                    chunks.extend(self.split_text(text))
+                    text = self.extract_text_from_pdf(os.path.join(subject_path, file))
+                    texts.append(text[:10000])  # Limit text length
                 except Exception as e:
-                    logger.error(f"Error processing {pdf_path}: {e}")
+                    logger.error(f"Error processing PDF: {e}")
 
-        if not chunks:
+        if not texts:
             return
 
         key = f"{exam.lower()}_{subject.lower()}"
-        self.subject_chunks[key] = chunks
-
+        self.subject_texts[key] = texts
+        
+        # Create TF-IDF vectorizer (memory efficient)
+        self.vectorizers[key] = TfidfVectorizer(stop_words='english', max_features=5000)
         try:
-            self.load_model()
-            # Process in batches to reduce memory spikes
-            batch_size = 10
-            embeddings = []
-            for i in range(0, len(chunks), batch_size):
-                batch = chunks[i:i + batch_size]
-                embeddings.append(self.model.encode(batch, convert_to_numpy=True))
-                gc.collect()
-            
-            embeddings = np.concatenate(embeddings)
-            self.subject_embeddings[key] = embeddings.astype(np.float16)  # Save memory
-
-            # Create FAISS index with reduced precision
-            index = faiss.IndexFlatL2(embeddings.shape[1])
-            index.add(embeddings.astype(np.float32))
-            self.subject_index[key] = index
-            logger.info(f"Loaded {len(chunks)} chunks for {key} (embeddings: {embeddings.shape})")
+            self.vectorizers[key].fit_transform(texts)
+            logger.info(f"Loaded {len(texts)} documents for {key}")
         except Exception as e:
-            logger.error(f"Error creating embeddings/index for {key}: {e}")
+            logger.error(f"Error creating vectorizer for {key}: {e}")
             self._cleanup_failed_subject(key)
 
-    def _cleanup_failed_subject(self, key: str) -> None:
-        """Clean up failed subject processing"""
-        self.subject_chunks.pop(key, None)
-        self.subject_embeddings.pop(key, None)
-        gc.collect()
-
-    def extract_text_from_pdf(self, file_path: str) -> str:
-        """Extract text from PDF with error handling"""
-        text = []
-        try:
-            with open(file_path, "rb") as f:
-                reader = pypdf.PdfReader(f)
-                for page in reader.pages:
-                    if page_text := page.extract_text():
-                        text.append(page_text)
-            return "\n".join(text)
-        except Exception as e:
-            logger.error(f"Error reading PDF {file_path}: {e}")
-            raise
-
-    def split_text(self, text: str, chunk_size: int = 200) -> List[str]:
-        """Split text into smaller chunks with overlap"""
-        words = text.split()
-        chunks = []
-        for i in range(0, len(words), chunk_size):
-            chunk = " ".join(words[max(0, i-50):i+chunk_size])  # 50-word overlap
-            chunks.append(chunk)
-        return chunks
+    # [Keep all other methods from previous version except embedding-related code]
+    # [Keep extract_text_from_pdf, split_text, etc.]
 
     def get_answer(self, question: str, exam: Optional[str] = None, subject: Optional[str] = None) -> str:
-        """Get answer with memory-efficient processing"""
+        """Get answer using lightweight TF-IDF approach"""
         if not question.strip():
             return "Please provide a valid question."
             
@@ -129,28 +74,32 @@ class AIEngine:
             return "Subject is required."
 
         try:
-            self.load_model()
             key = self._get_subject_key(exam, subject)
             
-            if key not in self.subject_index:
+            if key not in self.vectorizers:
                 return self._handle_missing_subject(subject)
 
-            # Process question in memory-efficient way
-            question_embedding = self.model.encode([question], convert_to_numpy=True)
-            question_embedding = question_embedding.astype(np.float32)
+            # TF-IDF similarity search
+            vectorizer = self.vectorizers[key]
+            question_vec = vectorizer.transform([question])
+            doc_vecs = vectorizer.transform(self.subject_texts[key])
             
-            # Search with limited results
-            D, I = self.subject_index[key].search(question_embedding, k=2)
-            relevant_chunks = self._get_relevant_chunks(key, D, I)
+            # Find most similar document
+            similarities = cosine_similarity(question_vec, doc_vecs)
+            best_match_idx = similarities.argmax()
             
-            return self._format_answer(relevant_chunks) if relevant_chunks else \
-                   "I couldn't find a relevant answer in my materials."
+            if similarities[0, best_match_idx] < 0.2:  # Similarity threshold
+                return "I couldn't find a relevant answer."
+                
+            return self._format_answer(self.subject_texts[key][best_match_idx])
                 
         except Exception as e:
             logger.error(f"Error processing question: {e}")
-            return "Sorry, I encountered an error processing your question."
+            return "Sorry, I encountered an error."
         finally:
             gc.collect()
+
+    # [Keep all helper methods]
 
     def _get_subject_key(self, exam: Optional[str], subject: str) -> str:
         """Generate the lookup key for a subject"""
