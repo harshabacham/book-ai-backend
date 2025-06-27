@@ -5,7 +5,7 @@ from fastapi import FastAPI, Request, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import Optional
-from ..ai_engine import AIEngine
+from src.ai_engine import AIEngine
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
