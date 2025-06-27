@@ -5,19 +5,30 @@ import faiss
 from sentence_transformers import SentenceTransformer
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
-from typing import Dict, List, Optional
+
+
+from typing import Optional
+
+
+def your_function(exam: Optional[str] = None, subject: Optional[str] = None):
+    exam = exam or "default_value"
+    subject = subject or "default_value"
+    # rest of your code
+
 
 class AIEngine:
     def __init__(self, data_folder: str = "data"):
         self.subject_chunks: Dict[str, List[str]] = {}
         self.subject_embeddings: Dict[str, np.ndarray] = {}
         self.subject_index: Dict[str, faiss.Index] = {}
-        self.model = SentenceTransformer('all-MiniLM-L6-v2')
+        self.model = SentenceTransformer("all-MiniLM-L6-v2")
         self.load_data(data_folder)
 
     def load_data(self, folder_path: str) -> None:
         if not os.path.exists(folder_path):
-            print(f"[WARNING] Data folder '{folder_path}' not found. Skipping load_data.")
+            print(
+                f"[WARNING] Data folder '{folder_path}' not found. Skipping load_data."
+            )
             return
 
         try:
@@ -41,19 +52,19 @@ class AIEngine:
                     chunks.extend(self.split_text(text))
                 except Exception as e:
                     print(f"Error processing {pdf_path}: {e}")
-        
+
         if not chunks:
             return
 
         key = f"{exam.lower()}_{subject.lower()}"
         self.subject_chunks[key] = chunks
-        
+
         try:
             embeddings = self.model.encode(chunks)
             self.subject_embeddings[key] = embeddings
-            
+
             index = faiss.IndexFlatL2(embeddings.shape[1])
-            index.add(np.array(embeddings).astype('float32'))  # Explicit float32
+            index.add(np.array(embeddings).astype("float32"))  # Explicit float32
             self.subject_index[key] = index
             print(f"Loaded {len(chunks)} chunks for {key}")
         except Exception as e:
@@ -96,13 +107,19 @@ class AIEngine:
         # Handle case where only subject is provided (for backward compatibility)
         if exam is None and subject is not None:
             # Try to find the subject in any exam
-            matching_keys = [key for key in self.subject_chunks.keys() if subject.lower() in key]
+            matching_keys = [
+                key for key in self.subject_chunks.keys() if subject.lower() in key
+            ]
             if not matching_keys:
                 return f"📄 No content found for subject '{subject}'."
             key = matching_keys[0]  # Use the first match
         else:
-            key = f"{exam.lower()}_{subject.lower()}" if exam and subject else subject.lower()
-        
+            key = (
+                f"{exam.lower()}_{subject.lower()}"
+                if exam and subject
+                else subject.lower()
+            )
+
         if key not in self.subject_index:
             available_subjects = list(self.subject_chunks.keys())
             return f"📄 No content found for '{key}'. Available subjects: {', '.join(available_subjects)}"
@@ -110,20 +127,20 @@ class AIEngine:
         try:
             question_embedding = self.model.encode([question])
             D, I = self.subject_index[key].search(np.array(question_embedding), k=3)
-            
+
             # Get top 3 most relevant chunks
             relevant_chunks = []
             for i in range(min(3, len(I[0]))):
                 if D[0][i] < 1.5:  # Similarity threshold
                     relevant_chunks.append(self.subject_chunks[key][I[0][i]])
-            
+
             if not relevant_chunks:
                 return "🤖 Sorry, I couldn't find an answer related to your question."
-            
+
             # Combine the most relevant chunks
             answer = " ".join(relevant_chunks[:2])  # Use top 2 chunks
             return answer[:1000] + "..." if len(answer) > 1000 else answer
-            
+
         except Exception as e:
             print(f"Error processing question: {e}")
             return "🤖 Sorry, there was an error processing your question."
