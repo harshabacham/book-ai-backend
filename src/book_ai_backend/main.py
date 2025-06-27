@@ -5,18 +5,19 @@ from fastapi import FastAPI, Request, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import Optional
-from src.ai_engine import AIEngine
+from .ai_engine import AIEngine
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-app = FastAPI(
-    title="Book AI Backend",
-    version="1.0.0",
-    description="AI-powered question answering system for educational content",
-)
 
+app = FastAPI()
+ai_engine = AIEngine()
+
+@app.get("/")
+async def root():
+    return {"message": "Book AI Backend Running"}
 # CORS setup for frontend
 app.add_middleware(
     CORSMiddleware,
