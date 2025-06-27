@@ -3,9 +3,6 @@ name = "book-ai-backend"
 version = "0.1.0"
 description = "Backend service for Book AI application"
 authors = ["harshabacham <you@example.com>"]
-readme = "README.md"
-
-# Proper package specification (remove any other packages sections)
 packages = [
     { include = "book_ai_backend", from = "src" }
 ]
@@ -14,23 +11,9 @@ packages = [
 python = "^3.11"
 fastapi = "^0.109.2"
 uvicorn = "^0.27.0"
-joblib = "^1.5.1"
-numpy = "^2.3.1"
-scikit-learn = "^1.7.0"
-scipy = "^1.16.0"
-threadpoolctl = "^3.6.0"
-package-name = "^0.1"
 pypdf = "^5.6.1"
-faiss-cpu = "^1.11.0"
-sentence-transformers = "^4.1.0"
-
-[tool.poetry.group.dev.dependencies]
-pytest = "^7.0"
-black = "^23.0"
-mypy = "^1.0"
-types-requests = "^2.32.4.20250611"
-types-python-dateutil = "^2.9.0.20250516"
-types-pyyaml = "^6.0.12.20250516"
+scikit-learn = "^1.7.0"
+numpy = "^2.3.1"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
