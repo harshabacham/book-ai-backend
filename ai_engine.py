@@ -12,9 +12,8 @@ logger = logging.getLogger(__name__)
 
 class AIEngine:
     def __init__(self, data_folder: str = "data"):
-        """Initialize with TF-IDF instead of heavy embeddings"""
         self.vectorizers: Dict[str, TfidfVectorizer] = {}
-        self.subject_texts: Dict[str, List[str]] = {}
+        self.subject_texts: Dict[str, List[str]] = {}  # Renamed from subject_chunks
         self.load_data(data_folder)
         logger.info("AI Engine initialized with TF-IDF")
 
@@ -128,5 +127,5 @@ class AIEngine:
         """List available subjects without technical keys"""
         return list(set(
             key.split('_')[-1]  # Extract just the subject name
-            for key in self.subject_chunks.keys()
+            for key in self.subject_texts.keys()  # Updated reference
         ))
