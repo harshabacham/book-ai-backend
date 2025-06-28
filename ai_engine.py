@@ -67,7 +67,7 @@ class AIEngine:
         try:
             self.vectorizers[key] = TfidfVectorizer(
                 stop_words='english',
-                max_features=3000,
+                max_features=5000,
                 min_df=1,
                 max_df=0.9,
                 ngram_range=(1, 2)
