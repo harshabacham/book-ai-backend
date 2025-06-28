@@ -12,7 +12,8 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("ai_engine")
 
 class AIEngine:
-    def __init__(self, data_folder: str = "data"):
+    def __init__(self, data_folder: str = os.getenv("DATA_PATH", "data")):
+        self.load_data(data_folder)
         """Initialize with enhanced error handling and resource management"""
         self.vectorizers: Dict[str, TfidfVectorizer] = {}
         self.subject_texts: Dict[str, List[str]] = {}
@@ -84,10 +85,10 @@ class AIEngine:
             # Initialize vectorizer with safe defaults
             self.vectorizers[key] = TfidfVectorizer(
                 stop_words='english',
-                max_features=10000,
-                max_df=0.95,
-                min_df=1,
-                ngram_range=(1, 2)
+                max_features=1000,
+                # max_df=0.95,
+                # min_df=1,
+                # ngram_range=(1, 2)
             )
             
             # Fit vectorizer
