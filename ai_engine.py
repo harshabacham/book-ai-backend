@@ -81,11 +81,11 @@ class AIEngine:
             if len(texts) < 5:
                 min_df = 1
                 max_df = 1.0  # Include all terms
-                ngram_range = (1, 1)  # Only unigrams
+                ngram_range = (1, 2)  # Only unigrams
                 
             self.vectorizers[key] = TfidfVectorizer(
                 stop_words='english',
-                max_features=1000,
+                max_features=3000,
                 min_df=min_df,
                 max_df=max_df,
                 ngram_range=ngram_range
@@ -150,7 +150,7 @@ class AIEngine:
             best_idx = similarities.argmax()
             best_score = similarities[0, best_idx]
             
-            if best_score < 0.05:
+            if best_score <0.005:
                 return self._get_low_confidence_response(subject)
                 
             return self._format_response(
