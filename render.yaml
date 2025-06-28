@@ -5,6 +5,6 @@ services:
     buildCommand: |
       python -m pip install --upgrade pip
       pip install -r requirements.txt
-    startCommand: uvicorn main:app --host 0.0.0.0 --port 8000
+    startCommand: uvicorn main:app --host 0.0.0.0 --port 1000
     build:
       pythonVersion: "3.11.8"  # Must be exactly this version
