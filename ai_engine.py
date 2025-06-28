@@ -69,7 +69,7 @@ class AIEngine:
             self.vectorizers[key] = TfidfVectorizer(
                 stop_words='english',
                 max_features=5000,
-                max_df=0.85,
+                max_df=0.95,
                 min_df=1
             )
             self.vectorizers[key].fit(texts)  # Just fit, we'll transform later
