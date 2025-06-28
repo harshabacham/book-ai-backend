@@ -150,7 +150,7 @@ class AIEngine:
             best_idx = similarities.argmax()
             best_score = similarities[0, best_idx]
             
-            if best_score < 0.2:
+            if best_score < 0.05:
                 return self._get_low_confidence_response(subject)
                 
             return self._format_response(
