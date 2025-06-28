@@ -51,7 +51,7 @@ class AIEngine:
         logger.info(f"Loaded {processed_count} subjects")
 
     def _process_subject(self, exam: str, subject: str, subject_path: Path) -> bool:
-        """Process all PDFs for a single subject"""
+        """Process all PDFs for a single subject with adaptive vectorizer settings"""
         cache_key = f"{exam}_{subject}"
         if cache_key in self._text_cache:
             return True
@@ -63,7 +63,7 @@ class AIEngine:
                 if text and len(text) > 100:  # Minimum 100 characters
                     texts.append(text)
             except Exception as e:
-                logger.error(f"Error processing {pdf_file}: {e}")
+                logger.warning(f"Error processing {pdf_file}: {e}")
                 continue
 
         if len(texts) < 1:
@@ -72,15 +72,28 @@ class AIEngine:
 
         key = self._generate_key(exam, subject)
         try:
+            # Adaptive vectorizer settings based on document count
+            min_df = 1
+            max_df = 0.95
+            ngram_range = (1, 2)
+            
+            # Adjust for very small document sets
+            if len(texts) < 5:
+                min_df = 1
+                max_df = 1.0  # Include all terms
+                ngram_range = (1, 1)  # Only unigrams
+                
             self.vectorizers[key] = TfidfVectorizer(
                 stop_words='english',
                 max_features=1000,
-                min_df=1,
-                max_df=0.95,
-                ngram_range=(1, 2))
+                min_df=min_df,
+                max_df=max_df,
+                ngram_range=ngram_range
+            )
             self.vectorizers[key].fit(texts)
             self.subject_texts[key] = texts
             self._text_cache[cache_key] = key
+            logger.info(f"Successfully loaded subject: {key}")
             return True
         except Exception as e:
             logger.error(f"Vectorizer failed for {key}: {e}")
@@ -88,17 +101,30 @@ class AIEngine:
             return False
 
     def _process_pdf(self, pdf_path: Path) -> Optional[str]:
-        """Extract and preprocess text from a PDF file"""
+        """Extract and preprocess text from a PDF file with better error handling"""
         try:
             text = []
             with pdf_path.open("rb") as f:
                 reader = pypdf.PdfReader(f)
                 for page in reader.pages[:50]:  # Limit to first 50 pages
-                    if page_text := page.extract_text():
-                        text.append(self._preprocess_text(page_text))
-            return " ".join(text)[:15000] if text else None
+                    try:
+                        if page_text := page.extract_text():
+                            cleaned = self._preprocess_text(page_text)
+                            if len(cleaned) > 50:  # Skip very short pages
+                                text.append(cleaned)
+                    except Exception as page_error:
+                        logger.warning(f"Page error in {pdf_path}: {page_error}")
+                        continue
+            
+            if not text:
+                logger.warning(f"No extractable text in {pdf_path}")
+                return None
+                
+            combined = " ".join(text)[:15000]  # Limit total length
+            return combined if len(combined) > 100 else None  # Reject very short documents
+            
         except Exception as e:
-            logger.error(f"PDF processing error {pdf_path}: {e}")
+            logger.error(f"PDF processing failed {pdf_path}: {e}")
             return None
 
     @staticmethod
