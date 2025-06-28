@@ -70,7 +70,7 @@ class AIEngine:
                 stop_words='english',
                 max_features=5000,
                 max_df=0.85,
-                min_df=2
+                min_df=1
             )
             self.vectorizers[key].fit(texts)  # Just fit, we'll transform later
             self._text_cache[cache_key] = key
@@ -156,7 +156,7 @@ class AIEngine:
     @staticmethod
     def _format_response(text: str, score: float) -> str:
         """Format answer with confidence indicator"""
-        confidence = "high" if score > 0.5 else "medium"
+        confidence = "high" if score > 0.15 else "medium"
         snippet = text[:600] + ("..." if len(text) > 600 else "")
         return (
             f"[{confidence} confidence]\n"
