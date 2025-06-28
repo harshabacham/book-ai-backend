@@ -84,13 +84,13 @@ class AIEngine:
             # Initialize vectorizer with safe defaults
             self.vectorizers[key] = TfidfVectorizer(
                 stop_words='english',
-                max_features=10000,  # Increased from 5000 for better coverage
-                max_df=0.90,          # Slightly more restrictive than 0.95
-                min_df=1,             # Must appear in at least 1 document
-                ngram_range=(1, 2)    # Include bigrams
+                max_features=10000,
+                max_df=0.90,
+                min_df=1,
+                ngram_range=(1, 2)
             )
             
-            # Fit vectorizer (will fail here if parameters are invalid)
+            # Fit vectorizer
             self.vectorizers[key].fit(texts)
             self.subject_texts[key] = texts
             self._text_cache[cache_key] = key
@@ -126,7 +126,7 @@ class AIEngine:
                 logger.warning(f"No text extracted from {pdf_path}")
                 return None
                 
-            return " ".join(text)[:20000]  # Increased limit from 15k to 20k
+            return " ".join(text)[:20000]
 
         except pypdf.PdfReadError:
             logger.error(f"Could not read PDF: {pdf_path}")
@@ -138,12 +138,10 @@ class AIEngine:
     @staticmethod
     def _preprocess_text(text: str) -> str:
         """Enhanced text cleaning"""
-        # Basic normalization
         text = " ".join(text.split())
-        # Remove common PDF artifacts
         for artifact in ["\x0c", "\ufeff", "\u200b"]:
             text = text.replace(artifact, "")
-        return text.lower()  # Normalize case
+        return text.lower()
 
     def get_answer(self, question: str, exam: Optional[str] = None, subject: Optional[str] = None) -> str:
         """Get answer with improved relevance and error handling"""
@@ -160,7 +158,6 @@ class AIEngine:
             if key not in self.vectorizers:
                 return self._get_missing_subject_response(subject)
 
-            # Transform with error handling
             question_vec = self.vectorizers[key].transform([question])
             doc_vecs = self.vectorizers[key].transform(self.subject_texts[key])
             
@@ -168,7 +165,7 @@ class AIEngine:
             best_idx = similarities.argmax()
             best_score = similarities[0, best_idx]
             
-            if best_score < 0.2:  # Slightly lower threshold
+            if best_score < 0.2:
                 return self._get_low_confidence_response(subject)
                 
             return self._format_response(
@@ -180,20 +177,44 @@ class AIEngine:
             logger.error(f"Query processing failed: {e}", exc_info=True)
             return "Sorry, I encountered an error processing your question."
 
-    # ... (keep existing helper methods unchanged) ...
+    def _generate_key(self, exam: Optional[str], subject: str) -> str:
+        return f"{exam.lower()}_{subject.lower()}" if exam else subject.lower()
+
+    def _get_missing_subject_response(self, subject: str) -> str:
+        available = sorted({k.split('_')[-1] for k in self.subject_texts})
+        return (
+            f"No content available for '{subject}'. "
+            f"Available subjects: {', '.join(available)}"
+        )
+
+    def _get_low_confidence_response(self, subject: str) -> str:
+        return (
+            f"I couldn't find a confident answer about {subject}. "
+            "Try rephrasing or asking about a different topic."
+        )
+
+    @staticmethod
+    def _format_response(text: str, score: float) -> str:
+        confidence = "high" if score > 0.15 else "medium"
+        snippet = text[:600] + ("..." if len(text) > 600 else "")
+        return (
+            f"[{confidence} confidence]\n"
+            f"{snippet}\n\n"
+            f"(Source relevance score: {score:.2f})"
+        )
+
+    def list_available_subjects(self) -> List[str]:
+        return sorted({k.split('_')[-1] for k in self.subject_texts})
+
+    def get_subject_stats(self) -> Dict[str, Tuple[int, int]]:
+        return {
+            k: (len(texts), sum(len(t) for t in texts))
+            for k, texts in self.subject_texts.items()
+        }
 
     def _cleanup_failed_subject(self, key: str) -> None:
-        """Enhanced resource cleanup"""
         for resource in [self.vectorizers, self.subject_texts, self._text_cache]:
             if key in resource:
                 del resource[key]
         gc.collect()
         logger.info(f"Cleaned up resources for failed subject: {key}")
-
-    def verify_data_loading(self) -> Dict[str, Tuple[int, int]]:
-        """Diagnostic method to verify data loading"""
-        stats = {}
-        for subject, texts in self.subject_texts.items():
-            avg_length = sum(len(t) for t in texts) / len(texts) if texts else 0
-            stats[subject] = (len(texts), round(avg_length, 2))
-        return stats

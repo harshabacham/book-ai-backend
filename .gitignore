@@ -1,7 +1,4 @@
-# Python
+.env
 __pycache__/
-*.py[cod]
-*$py.class
-*.so
-.venv/
-venv/
+*.pyc
+.DS_Store
