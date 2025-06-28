@@ -1,110 +1,82 @@
 import os
-import gc
-import numpy as np
-from typing import Dict, List, Optional, Tuple
 import logging
 from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.metrics.pairwise import cosine_similarity
-import pypdf
 from pathlib import Path
+import gc
 
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger("ai_engine")
+logging.basicConfig(level=os.getenv('LOG_LEVEL', 'INFO'))
+logger = logging.getLogger(__name__)
 
 class AIEngine:
-    def __init__(self, data_folder: str = os.getenv("DATA_PATH", "data")):
-        self.load_data(data_folder)
-        """Initialize with enhanced error handling and resource management"""
-        self.vectorizers: Dict[str, TfidfVectorizer] = {}
-        self.subject_texts: Dict[str, List[str]] = {}
-        self._text_cache: Dict[str, str] = {}
+    def __init__(self, data_folder: str = None):
+        # Initialize all required attributes first
+        self.vectorizers = {}
+        self.subject_texts = {}
+        self._text_cache = {}
         
-        # Validate data folder exists before proceeding
-        self.data_folder = Path(data_folder)
-        if not self.data_folder.exists():
-            logger.error(f"Data folder not found at: {self.data_folder.absolute()}")
-            raise FileNotFoundError(f"Data directory not found: {data_folder}")
-        
-        self.load_data(self.data_folder)
-        logger.info(f"AI Engine initialized with {len(self.subject_texts)} subjects")
-
-    def load_data(self, folder_path: Path) -> None:
-        """Load data with improved error handling and validation"""
-        processed_count = 0
-        document_count = 0
-        
+        data_path = os.getenv('DATA_PATH', 'data')
+        if data_folder is None:
+            data_folder = data_path
+            
         try:
-            # Verify directory structure
-            if not any(folder_path.iterdir()):
-                logger.warning(f"No exam directories found in {folder_path}")
-                return
+            self.load_data(data_folder)
+        except Exception as e:
+            logger.error(f"Failed to load data: {e}")
+            # Clear any partially loaded data
+            self.vectorizers = {}
+            self.subject_texts = {}
+            self._text_cache = {}
 
-            for exam_dir in folder_path.iterdir():
-                if not exam_dir.is_dir():
-                    continue
-                    
+    def load_data(self, folder_path: str):
+        """Load data with proper initialization"""
+        path = Path(folder_path)
+        if not path.exists():
+            logger.warning(f"Data folder not found at {path}")
+            return
+
+        # Process each subject
+        for exam_dir in path.iterdir():
+            if exam_dir.is_dir():
                 for subject_dir in exam_dir.iterdir():
                     if subject_dir.is_dir():
-                        if self._process_subject(exam_dir.name, subject_dir.name, subject_dir):
-                            processed_count += 1
-                            document_count += len(self.subject_texts[f"{exam_dir.name}_{subject_dir.name}"])
-                        gc.collect()  # Proactively manage memory
+                        self._process_subject(exam_dir.name, subject_dir.name, subject_dir)
 
-        except Exception as e:
-            logger.error(f"Critical error loading data: {e}", exc_info=True)
-            raise
-
-        logger.info(f"Loaded {processed_count} subjects with {document_count} documents")
-
-    def _process_subject(self, exam: str, subject: str, subject_path: Path) -> bool:
-        """Process subject with robust error handling"""
-        cache_key = f"{exam}_{subject}"
-        key = self._generate_key(exam, subject)
-        
+    def _process_subject(self, exam: str, subject: str, subject_path: Path):
+        """Safe subject processing with fallbacks"""
         try:
+            key = f"{exam.lower()}_{subject.lower()}"
+            
             # Skip if already processed
-            if cache_key in self._text_cache:
+            if key in self._text_cache:
                 return True
-
-            # Validate PDF files exist
-            pdf_files = list(subject_path.glob("*.pdf"))
-            if not pdf_files:
-                logger.warning(f"No PDFs found in {subject_path}")
-                return False
-
-            # Process all PDFs
+                
             texts = []
-            for pdf_file in pdf_files:
-                if text := self._process_pdf(pdf_file):
+            for pdf_file in subject_path.glob("*.pdf"):
+                text = self._process_pdf(pdf_file)
+                if text:
                     texts.append(text)
-
-            if not texts:
-                logger.warning(f"No valid text extracted from {subject_path}")
+            
+            if len(texts) < 1:  # Require at least 1 valid document
+                logger.warning(f"No valid documents for {key}")
                 return False
-
-            # Initialize vectorizer with safe defaults
+                
+            # Initialize vectorizer
             self.vectorizers[key] = TfidfVectorizer(
                 stop_words='english',
                 max_features=1000,
-                max_df=1.0,
                 min_df=1,
-                # ngram_range=(1, 2)
+                max_df=0.95
             )
-            
-            # Fit vectorizer
-            self.vectorizers[key].fit(texts)
             self.subject_texts[key] = texts
-            self._text_cache[cache_key] = key
+            self._text_cache[key] = True
             return True
-
-        except ValueError as e:
-            logger.error(f"Vectorizer configuration error for {key}: {e}")
-            self._cleanup_failed_subject(key)
-            return False
+            
         except Exception as e:
-            logger.error(f"Unexpected error processing {key}: {e}")
+            logger.error(f"Error processing {subject}: {e}")
             self._cleanup_failed_subject(key)
             return False
+
+    # ... [keep all other existing methods unchanged] ...
 
     def _process_pdf(self, pdf_path: Path) -> Optional[str]:
         """Extract text from PDF with enhanced error handling"""
