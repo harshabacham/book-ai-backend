@@ -106,11 +106,11 @@ class AIEngine:
             text = []
             with pdf_path.open("rb") as f:
                 reader = pypdf.PdfReader(f)
-                for page in reader.pages[:50]:  # Limit to first 50 pages
+                for page in reader.pages[:100]:  # Limit to first 50 pages
                     try:
                         if page_text := page.extract_text():
                             cleaned = self._preprocess_text(page_text)
-                            if len(cleaned) > 50:  # Skip very short pages
+                            if len(cleaned) > 1:  # Skip very short pages
                                 text.append(cleaned)
                     except Exception as page_error:
                         logger.warning(f"Page error in {pdf_path}: {page_error}")
