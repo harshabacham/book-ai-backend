@@ -151,12 +151,14 @@ class AIEngine:
             best_score = similarities[0, best_idx]
             
             if best_score <0.005:
+                logger.info(f"Low confidence match: Score={best_score:.4f}")
                 return self._get_low_confidence_response(subject)
                 
-            return self._format_response(
-                self.subject_texts[key][best_idx],
-                best_score
-            )
+            full_text = self.subject_texts[key][best_idx]
+            lines = full_text.split('. ')
+            top_lines = '. '.join(lines[:5])  # Just first 5 sentences
+            return self._format_response(top_lines, best_score)
+
         except Exception as e:
             logger.error(f"Query processing failed: {e}")
             return "Sorry, I encountered an error processing your question."
