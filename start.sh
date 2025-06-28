@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 export PYTHONPATH="${PYTHONPATH}:$(pwd)"
-uvicorn main:app --host 0.0.0.0 --port $PORT
+uvicorn main:app --host 0.0.0.0 --port $PORT --env-file .env
