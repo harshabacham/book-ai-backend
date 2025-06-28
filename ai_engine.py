@@ -143,7 +143,7 @@ class AIEngine:
             logger.info(f"Best Match Score: {best_score:.4f}")
             logger.info(f"Top Result (short): {self.subject_texts[key][best_idx][:80]}")
 
-            if best_score < 0.2:
+            if best_score < 0.005:
                 return self._get_low_confidence_response(subject)
 
             best_text = self.subject_texts[key][best_idx]
