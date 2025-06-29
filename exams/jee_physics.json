@@ -1,0 +1,220 @@
+{
+  "Physics": {
+    "1": [
+      {
+        "id": "phy1_q1",
+        "question": "What is the SI unit of force?",
+        "options": ["Watt", "Newton", "Joule", "Pascal"],
+        "answer": "Newton",
+        "subtopic": "Units and Dimensions"
+      },
+      {
+        "id": "phy1_q2",
+        "question": "Which of these is a scalar quantity?",
+        "options": ["Velocity", "Displacement", "Acceleration", "Speed"],
+        "answer": "Speed",
+        "subtopic": "Kinematics"
+      },
+      {
+        "id": "phy1_q3",
+        "question": "Acceleration due to gravity on Earth is approximately:",
+        "options": ["8.9 m/s²", "9.8 m/s²", "10.8 m/s²", "7.8 m/s²"],
+        "answer": "9.8 m/s²",
+        "subtopic": "Laws of Motion"
+      },
+      {
+        "id": "phy1_q4",
+        "question": "What is the dimensional formula for work?",
+        "options": ["MLT^-2", "ML^2T^-2", "MLT^-1", "M^2L^2T^-2"],
+        "answer": "ML^2T^-2",
+        "subtopic": "Units and Dimensions"
+      },
+      {
+        "id": "phy1_q5",
+        "question": "Which Newton’s law is associated with action and reaction?",
+        "options": ["First", "Second", "Third", "Law of Gravitation"],
+        "answer": "Third",
+        "subtopic": "Laws of Motion"
+      },
+      {
+        "id": "phy1_q6",
+        "question": "What does a speed-time graph's slope represent?",
+        "options": ["Speed", "Acceleration", "Displacement", "Velocity"],
+        "answer": "Acceleration",
+        "subtopic": "Kinematics"
+      },
+      {
+        "id": "phy1_q7",
+        "question": "What is the unit of pressure in SI?",
+        "options": ["Bar", "atm", "Pa", "Torr"],
+        "answer": "Pa",
+        "subtopic": "Mechanical Properties of Fluids"
+      },
+      {
+        "id": "phy1_q8",
+        "question": "When no net force acts on a body, its acceleration is:",
+        "options": ["Zero", "Infinity", "Constant", "Negative"],
+        "answer": "Zero",
+        "subtopic": "Laws of Motion"
+      },
+      {
+        "id": "phy1_q9",
+        "question": "Which instrument is used to measure temperature?",
+        "options": ["Barometer", "Ammeter", "Thermometer", "Voltmeter"],
+        "answer": "Thermometer",
+        "subtopic": "Thermodynamics"
+      },
+      {
+        "id": "phy1_q10",
+        "question": "Which quantity is measured in joules?",
+        "options": ["Power", "Force", "Energy", "Pressure"],
+        "answer": "Energy",
+        "subtopic": "Work, Power and Energy"
+      }
+    ],
+    "2": [
+      {
+        "id": "phy2_q1",
+        "question": "Which law explains why passengers fall forward when a bus stops suddenly?",
+        "options": ["Newton’s First Law", "Newton’s Second Law", "Newton’s Third Law", "Law of Gravitation"],
+        "answer": "Newton’s First Law",
+        "subtopic": "Laws of Motion"
+      },
+      {
+        "id": "phy2_q2",
+        "question": "A ball is thrown upwards. At its highest point, the velocity is:",
+        "options": ["Maximum", "Minimum", "Zero", "Negative"],
+        "answer": "Zero",
+        "subtopic": "Kinematics"
+      },
+      {
+        "id": "phy2_q3",
+        "question": "Impulse is equal to:",
+        "options": ["Change in momentum", "Force × time", "Both A and B", "None"],
+        "answer": "Both A and B",
+        "subtopic": "Laws of Motion"
+      },
+      {
+        "id": "phy2_q4",
+        "question": "What is the work done by centripetal force?",
+        "options": ["Positive", "Negative", "Zero", "Infinite"],
+        "answer": "Zero",
+        "subtopic": "Work, Power and Energy"
+      },
+      {
+        "id": "phy2_q5",
+        "question": "In SHM, acceleration is proportional to:",
+        "options": ["Velocity", "Displacement", "Time", "Frequency"],
+        "answer": "Displacement",
+        "subtopic": "Oscillations"
+      },
+      {
+        "id": "phy2_q6",
+        "question": "The SI unit of electric charge is:",
+        "options": ["Coulomb", "Ampere", "Volt", "Ohm"],
+        "answer": "Coulomb",
+        "subtopic": "Current Electricity"
+      },
+      {
+        "id": "phy2_q7",
+        "question": "A transformer works on the principle of:",
+        "options": ["Electromagnetic induction", "Static electricity", "Conduction", "Radiation"],
+        "answer": "Electromagnetic induction",
+        "subtopic": "Electromagnetic Induction"
+      },
+      {
+        "id": "phy2_q8",
+        "question": "In which medium does sound travel the fastest?",
+        "options": ["Air", "Water", "Steel", "Vacuum"],
+        "answer": "Steel",
+        "subtopic": "Waves"
+      },
+      {
+        "id": "phy2_q9",
+        "question": "Which color has the shortest wavelength?",
+        "options": ["Red", "Blue", "Violet", "Green"],
+        "answer": "Violet",
+        "subtopic": "Optics"
+      },
+      {
+        "id": "phy2_q10",
+        "question": "Capacitance depends on:",
+        "options": ["Area of plates", "Distance between plates", "Dielectric constant", "All of the above"],
+        "answer": "All of the above",
+        "subtopic": "Electrostatics"
+      }
+    ],
+    "3": [
+      {
+        "id": "phy3_q1",
+        "question": "Which physical quantity has unit kg·m/s?",
+        "options": ["Force", "Momentum", "Impulse", "Acceleration"],
+        "answer": "Momentum",
+        "subtopic": "Laws of Motion"
+      },
+      {
+        "id": "phy3_q2",
+        "question": "Which type of motion has constant angular velocity?",
+        "options": ["SHM", "Uniform Circular", "Projectile", "Non-uniform motion"],
+        "answer": "Uniform Circular",
+        "subtopic": "Rotational Motion"
+      },
+      {
+        "id": "phy3_q3",
+        "question": "In thermodynamics, internal energy is a:",
+        "options": ["Path function", "State function", "Variable", "Constant"],
+        "answer": "State function",
+        "subtopic": "Thermodynamics"
+      },
+      {
+        "id": "phy3_q4",
+        "question": "Which of the following cannot be used to produce electric current?",
+        "options": ["Generator", "Battery", "Transformer", "Solar Cell"],
+        "answer": "Transformer",
+        "subtopic": "Electromagnetic Induction"
+      },
+      {
+        "id": "phy3_q5",
+        "question": "Which is not a unit of power?",
+        "options": ["Watt", "Horsepower", "Joule", "kW"],
+        "answer": "Joule",
+        "subtopic": "Work, Power and Energy"
+      },
+      {
+        "id": "phy3_q6",
+        "question": "Which law relates magnetic field and electric current?",
+        "options": ["Faraday’s Law", "Ohm’s Law", "Ampere’s Law", "Gauss's Law"],
+        "answer": "Ampere’s Law",
+        "subtopic": "Magnetism"
+      },
+      {
+        "id": "phy3_q7",
+        "question": "The image formed by a convex mirror is:",
+        "options": ["Real and inverted", "Virtual and erect", "Real and erect", "Virtual and inverted"],
+        "answer": "Virtual and erect",
+        "subtopic": "Optics"
+      },
+      {
+        "id": "phy3_q8",
+        "question": "Lenz's Law is based on which principle?",
+        "options": ["Conservation of energy", "Conservation of momentum", "Conservation of mass", "Newton’s Laws"],
+        "answer": "Conservation of energy",
+        "subtopic": "Electromagnetic Induction"
+      },
+      {
+        "id": "phy3_q9",
+        "question": "Heat transfer without a medium is called:",
+        "options": ["Conduction", "Convection", "Radiation", "Transmission"],
+        "answer": "Radiation",
+        "subtopic": "Thermal Properties"
+      },
+      {
+        "id": "phy3_q10",
+        "question": "Which one of these quantities is vector?",
+        "options": ["Mass", "Temperature", "Speed", "Velocity"],
+        "answer": "Velocity",
+        "subtopic": "Kinematics"
+      }
+    ]
+  }
+}

@@ -1,0 +1,220 @@
+{
+  "Chemistry": {
+    "1": [
+      {
+        "id": "chem1_q1",
+        "question": "Which of the following is a noble gas?",
+        "options": ["Oxygen", "Nitrogen", "Neon", "Hydrogen"],
+        "answer": "Neon",
+        "subtopic": "Periodic Table"
+      },
+      {
+        "id": "chem1_q2",
+        "question": "Atomic number of Oxygen is:",
+        "options": ["6", "8", "7", "10"],
+        "answer": "8",
+        "subtopic": "Structure of Atom"
+      },
+      {
+        "id": "chem1_q3",
+        "question": "Which bond is present in H₂O?",
+        "options": ["Ionic", "Metallic", "Hydrogen", "Covalent"],
+        "answer": "Covalent",
+        "subtopic": "Chemical Bonding"
+      },
+      {
+        "id": "chem1_q4",
+        "question": "pH of a neutral solution is:",
+        "options": ["1", "5", "7", "9"],
+        "answer": "7",
+        "subtopic": "Acids and Bases"
+      },
+      {
+        "id": "chem1_q5",
+        "question": "Valency of carbon is:",
+        "options": ["2", "3", "4", "5"],
+        "answer": "4",
+        "subtopic": "Carbon and its Compounds"
+      },
+      {
+        "id": "chem1_q6",
+        "question": "NaCl is also called:",
+        "options": ["Bleaching powder", "Salt", "Baking soda", "Sugar"],
+        "answer": "Salt",
+        "subtopic": "Chemical Compounds"
+      },
+      {
+        "id": "chem1_q7",
+        "question": "What is the chemical symbol for Iron?",
+        "options": ["Fe", "Ir", "In", "I"],
+        "answer": "Fe",
+        "subtopic": "Elements and Symbols"
+      },
+      {
+        "id": "chem1_q8",
+        "question": "Which acid is found in lemon?",
+        "options": ["Acetic acid", "Citric acid", "Sulfuric acid", "Hydrochloric acid"],
+        "answer": "Citric acid",
+        "subtopic": "Organic Chemistry"
+      },
+      {
+        "id": "chem1_q9",
+        "question": "Water is a:",
+        "options": ["Element", "Compound", "Mixture", "Salt"],
+        "answer": "Compound",
+        "subtopic": "States of Matter"
+      },
+      {
+        "id": "chem1_q10",
+        "question": "Which gas turns lime water milky?",
+        "options": ["CO₂", "O₂", "N₂", "H₂"],
+        "answer": "CO₂",
+        "subtopic": "Environmental Chemistry"
+      }
+    ],
+    "2": [
+      {
+        "id": "chem2_q1",
+        "question": "Which element forms the basis of organic chemistry?",
+        "options": ["Hydrogen", "Nitrogen", "Carbon", "Oxygen"],
+        "answer": "Carbon",
+        "subtopic": "Organic Chemistry"
+      },
+      {
+        "id": "chem2_q2",
+        "question": "The chemical formula of Ammonia is:",
+        "options": ["NH₃", "NO₃", "HNO₃", "N₂H"],
+        "answer": "NH₃",
+        "subtopic": "Chemical Compounds"
+      },
+      {
+        "id": "chem2_q3",
+        "question": "What type of bond is found in NaCl?",
+        "options": ["Covalent", "Hydrogen", "Ionic", "Metallic"],
+        "answer": "Ionic",
+        "subtopic": "Bonding"
+      },
+      {
+        "id": "chem2_q4",
+        "question": "Which of the following is a base?",
+        "options": ["HCl", "NaOH", "H₂SO₄", "CH₃COOH"],
+        "answer": "NaOH",
+        "subtopic": "Acid-Base Reactions"
+      },
+      {
+        "id": "chem2_q5",
+        "question": "Which oxide is acidic?",
+        "options": ["CO₂", "MgO", "Na₂O", "CaO"],
+        "answer": "CO₂",
+        "subtopic": "Oxides"
+      },
+      {
+        "id": "chem2_q6",
+        "question": "What is the molar mass of water (H₂O)?",
+        "options": ["16 g/mol", "18 g/mol", "20 g/mol", "14 g/mol"],
+        "answer": "18 g/mol",
+        "subtopic": "Mole Concept"
+      },
+      {
+        "id": "chem2_q7",
+        "question": "Hydrogen gas is liberated when metals react with:",
+        "options": ["Bases", "Acids", "Water", "Salts"],
+        "answer": "Acids",
+        "subtopic": "Chemical Reactions"
+      },
+      {
+        "id": "chem2_q8",
+        "question": "Covalent compounds are usually:",
+        "options": ["Ionic", "Crystalline", "Soluble in water", "Non-conductors of electricity"],
+        "answer": "Non-conductors of electricity",
+        "subtopic": "Covalent Bonding"
+      },
+      {
+        "id": "chem2_q9",
+        "question": "What does an indicator do in a reaction?",
+        "options": ["Slows reaction", "Speeds reaction", "Shows pH change", "Evaporates"],
+        "answer": "Shows pH change",
+        "subtopic": "Indicators"
+      },
+      {
+        "id": "chem2_q10",
+        "question": "The common name of sodium bicarbonate is:",
+        "options": ["Washing soda", "Bleaching powder", "Baking soda", "Table salt"],
+        "answer": "Baking soda",
+        "subtopic": "Common Compounds"
+      }
+    ],
+    "3": [
+      {
+        "id": "chem3_q1",
+        "question": "Which of these is not a green-house gas?",
+        "options": ["CO₂", "CH₄", "N₂", "CFCs"],
+        "answer": "N₂",
+        "subtopic": "Environmental Chemistry"
+      },
+      {
+        "id": "chem3_q2",
+        "question": "Which compound has a triple bond?",
+        "options": ["C₂H₂", "C₂H₄", "C₂H₆", "CH₄"],
+        "answer": "C₂H₂",
+        "subtopic": "Hydrocarbons"
+      },
+      {
+        "id": "chem3_q3",
+        "question": "Which metal is most reactive?",
+        "options": ["Copper", "Gold", "Potassium", "Iron"],
+        "answer": "Potassium",
+        "subtopic": "Metals and Non-Metals"
+      },
+      {
+        "id": "chem3_q4",
+        "question": "The valency of nitrogen in NH₃ is:",
+        "options": ["1", "2", "3", "5"],
+        "answer": "3",
+        "subtopic": "Valency"
+      },
+      {
+        "id": "chem3_q5",
+        "question": "Bleaching powder releases:",
+        "options": ["CO₂", "O₂", "Cl₂", "SO₂"],
+        "answer": "Cl₂",
+        "subtopic": "Industrial Chemistry"
+      },
+      {
+        "id": "chem3_q6",
+        "question": "The basicity of H₂SO₄ is:",
+        "options": ["1", "2", "3", "4"],
+        "answer": "2",
+        "subtopic": "Acids and Bases"
+      },
+      {
+        "id": "chem3_q7",
+        "question": "Which ion is formed when an acid dissolves in water?",
+        "options": ["OH⁻", "H⁺", "Cl⁻", "Na⁺"],
+        "answer": "H⁺",
+        "subtopic": "Ions"
+      },
+      {
+        "id": "chem3_q8",
+        "question": "Which process is used to separate salt from seawater?",
+        "options": ["Filtration", "Evaporation", "Distillation", "Chromatography"],
+        "answer": "Evaporation",
+        "subtopic": "Separation Techniques"
+      },
+      {
+        "id": "chem3_q9",
+        "question": "Rust is chemically:",
+        "options": ["FeO", "Fe₂O₃·xH₂O", "Fe₃O₄", "Fe(OH)₂"],
+        "answer": "Fe₂O₃·xH₂O",
+        "subtopic": "Corrosion"
+      },
+      {
+        "id": "chem3_q10",
+        "question": "Which is a biodegradable polymer?",
+        "options": ["Polythene", "Polyvinyl chloride", "Polyester", "Starch"],
+        "answer": "Starch",
+        "subtopic": "Polymers"
+      }
+    ]
+  }
+}

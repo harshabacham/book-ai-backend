@@ -2,7 +2,7 @@ import os
 import logging
 import gc
 import numpy as np
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Optional
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 from pathlib import Path
@@ -17,12 +17,11 @@ class AIEngine:
         self.subject_texts: Dict[str, List[str]] = {}
         self._text_cache: Dict[str, str] = {}
 
-        data_path = os.getenv('DATA_PATH', 'data')
-        self.data_folder = data_folder if data_folder else data_path
+        self.data_folder = data_folder or os.getenv('DATA_PATH', 'data')
 
         try:
             self.load_data(self.data_folder)
-            logger.info(f"AI Engine initialized with {len(self.vectorizers)} subjects")
+            logger.info(f"✅ AI Engine initialized with {len(self.vectorizers)} subject(s)")
         except Exception as e:
             logger.error(f"AI Engine initialization failed: {e}")
             self.vectorizers = {}
@@ -30,10 +29,9 @@ class AIEngine:
             self._text_cache = {}
 
     def load_data(self, folder_path: str) -> None:
-        """Load and process all PDF data from the specified folder"""
         path = Path(folder_path)
         if not path.exists():
-            logger.warning(f"Data folder not found at {path}")
+            logger.warning(f"❌ Data folder not found at {path}")
             return
 
         processed_subjects = set()
@@ -49,9 +47,8 @@ class AIEngine:
                         processed_subjects.add(key)
                         gc.collect()
 
-        logger.info(f"Loaded {len(self.subject_texts)} subjects")
+        logger.info(f"📚 Loaded text for {len(self.subject_texts)} subject(s)")
 
-        # Fit vectorizers after all texts collected
         for key, texts in self.subject_texts.items():
             try:
                 self.vectorizers[key] = TfidfVectorizer(
@@ -62,25 +59,23 @@ class AIEngine:
                     ngram_range=(1, 3)
                 )
                 self.vectorizers[key].fit(texts)
-                logger.info(f"✅ Vectorizer created for: {key} with {len(texts)} chunks")
+                logger.info(f"🧠 Vectorizer ready for '{key}' with {len(texts)} chunks")
             except Exception as e:
                 logger.error(f"⚠️ Vectorizer failed for {key}: {e}")
                 self._cleanup_failed_subject(key)
 
     def _process_subject(self, key: str, subject_path: Path) -> None:
-        """Extract all PDFs for a subject and collect texts"""
         for pdf_file in subject_path.glob("*.pdf"):
             try:
                 text = self._process_pdf(pdf_file)
                 if text:
                     chunks = self._split_chunks(text)
                     self.subject_texts[key].extend(chunks)
-                    logger.info(f"📄 Loaded {len(chunks)} chunks from {pdf_file.name} into {key}")
+                    logger.info(f"📄 {pdf_file.name} → {len(chunks)} chunks loaded into '{key}'")
             except Exception as e:
-                logger.warning(f"❌ Error processing {pdf_file}: {e}")
+                logger.warning(f"❌ PDF Error ({pdf_file.name}): {e}")
 
     def _process_pdf(self, pdf_path: Path) -> Optional[str]:
-        """Extract and clean text from a PDF"""
         try:
             text = []
             with pdf_path.open("rb") as f:
@@ -103,9 +98,9 @@ class AIEngine:
     def _split_chunks(self, text: str, chunk_size: int = 1000) -> List[str]:
         words = text.split()
         return [
-            " ".join(words[i:i+chunk_size])
+            " ".join(words[i:i + chunk_size])
             for i in range(0, len(words), chunk_size)
-            if len(words[i:i+chunk_size]) > 20
+            if len(words[i:i + chunk_size]) > 20
         ]
 
     @staticmethod
@@ -114,7 +109,7 @@ class AIEngine:
 
     def get_answer(self, question: str, subject: str, exam: Optional[str] = None) -> str:
         if not question.strip():
-            return "Please provide a valid question."
+            return "❗ Please provide a valid question."
 
         key = self._generate_key(exam, subject)
         if key not in self.vectorizers:
@@ -128,27 +123,26 @@ class AIEngine:
             best_idx = similarities.argmax()
             best_score = similarities[0, best_idx]
 
-            logger.info(f"Q: {question}\nBest Match Score: {best_score:.4f}")
-            logger.info(f"Top Result (short): {self.subject_texts[key][best_idx][:80]}...")
+            logger.info(f"🔍 Q: {question} | Best Score: {best_score:.4f}")
 
             if best_score < 0.00001:
                 return self._get_low_confidence_response(subject)
 
             return self._format_response(self.subject_texts[key][best_idx], best_score)
         except Exception as e:
-            logger.error(f"❌ Error in get_answer: {e}")
-            return "Sorry, I encountered an error processing your question."
+            logger.error(f"💥 Error in get_answer: {e}")
+            return "😓 Sorry, I encountered an error while processing your question."
 
     def _generate_key(self, exam: Optional[str], subject: str) -> str:
         return f"{exam.lower()}_{subject.lower()}" if exam else subject.lower()
 
     def _get_missing_subject_response(self, subject: str) -> str:
         available = sorted({k.split('_')[-1] for k in self.subject_texts})
-        return f"No content available for '{subject}'. Available subjects: {', '.join(available)}"
+        return f"⚠️ No content for '{subject}'. Available subjects: {', '.join(available)}"
 
     def _get_low_confidence_response(self, subject: str) -> str:
         return (
-            f"I couldn't find a confident answer about {subject}. "
+            f"🤔 I couldn't find a confident answer for {subject}. "
             "Try rephrasing or asking something more specific."
         )
 
@@ -166,4 +160,4 @@ class AIEngine:
             if key in resource:
                 del resource[key]
         gc.collect()
-        logger.info(f"🧹 Cleaned up resources for: {key}")
+        logger.info(f"🧹 Resources cleaned for: {key}")
