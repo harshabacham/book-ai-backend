@@ -1,4 +1,5 @@
 {
+  "Physics": {
     "level1": [
       {
         "id": "phy1_q1",
@@ -71,7 +72,7 @@
         "subtopic": "Work, Power and Energy"
       }
     ],
-    "level2": [
+    "2": [
       {
         "id": "phy2_q1",
         "question": "Which law explains why passengers fall forward when a bus stops suddenly?",
@@ -143,7 +144,7 @@
         "subtopic": "Electrostatics"
       }
     ],
-    "level3": [
+    "3": [
       {
         "id": "phy3_q1",
         "question": "Which physical quantity has unit kg·m/s?",
@@ -216,3 +217,4 @@
       }
     ]
   }
+}

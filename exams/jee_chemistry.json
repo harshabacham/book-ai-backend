@@ -1,6 +1,6 @@
 {
-  
-    "level1": [
+  "Chemistry": {
+    "1": [
       {
         "id": "chem1_q1",
         "question": "Which of the following is a noble gas?",
@@ -72,7 +72,7 @@
         "subtopic": "Environmental Chemistry"
       }
     ],
-    "level2": [
+    "2": [
       {
         "id": "chem2_q1",
         "question": "Which element forms the basis of organic chemistry?",
@@ -144,7 +144,7 @@
         "subtopic": "Common Compounds"
       }
     ],
-    "level3": [
+    "3": [
       {
         "id": "chem3_q1",
         "question": "Which of these is not a green-house gas?",
@@ -217,4 +217,4 @@
       }
     ]
   }
-
+}

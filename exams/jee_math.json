@@ -1,218 +1,220 @@
 {
-  "level1": [
-    {
-      "id": "math1_q1",
-      "question": "What is the value of √81?",
-      "options": ["7", "8", "9", "10"],
-      "answer": "9",
-      "subtopic": "Squares and Roots"
-    },
-    {
-      "id": "math1_q2",
-      "question": "What is the value of 5² + 3²?",
-      "options": ["25", "34", "35", "36"],
-      "answer": "34",
-      "subtopic": "Algebraic Identities"
-    },
-    {
-      "id": "math1_q3",
-      "question": "If x = 3, what is the value of x² + 2x?",
-      "options": ["15", "18", "21", "25"],
-      "answer": "15",
-      "subtopic": "Polynomials"
-    },
-    {
-      "id": "math1_q4",
-      "question": "Which number is an integer?",
-      "options": ["2.5", "-3", "√2", "1/2"],
-      "answer": "-3",
-      "subtopic": "Number System"
-    },
-    {
-      "id": "math1_q5",
-      "question": "What is the value of sin(90°)?",
-      "options": ["0", "1", "1/2", "√3/2"],
-      "answer": "1",
-      "subtopic": "Trigonometry"
-    },
-    {
-      "id": "math1_q6",
-      "question": "What is the formula of area of circle?",
-      "options": ["2πr", "πr²", "πd", "2πr²"],
-      "answer": "πr²",
-      "subtopic": "Mensuration"
-    },
-    {
-      "id": "math1_q7",
-      "question": "Find HCF of 12 and 18.",
-      "options": ["2", "3", "6", "12"],
-      "answer": "6",
-      "subtopic": "Real Numbers"
-    },
-    {
-      "id": "math1_q8",
-      "question": "What is 25% of 200?",
-      "options": ["25", "40", "50", "75"],
-      "answer": "50",
-      "subtopic": "Percentages"
-    },
-    {
-      "id": "math1_q9",
-      "question": "2x + 3 = 9. Find x.",
-      "options": ["1", "2", "3", "4"],
-      "answer": "3",
-      "subtopic": "Linear Equations"
-    },
-    {
-      "id": "math1_q10",
-      "question": "Which one is a prime number?",
-      "options": ["4", "9", "11", "15"],
-      "answer": "11",
-      "subtopic": "Number Theory"
-    }
-  ],
-  "level2": [
-    {
-      "id": "math2_q1",
-      "question": "What is the derivative of sin(x)?",
-      "options": ["cos(x)", "-cos(x)", "-sin(x)", "tan(x)"],
-      "answer": "cos(x)",
-      "subtopic": "Differentiation"
-    },
-    {
-      "id": "math2_q2",
-      "question": "∫ x dx = ?",
-      "options": ["x", "x²/2", "x²", "x/2"],
-      "answer": "x²/2",
-      "subtopic": "Integration"
-    },
-    {
-      "id": "math2_q3",
-      "question": "Find the slope of line y = 2x + 3",
-      "options": ["2", "3", "1", "0"],
-      "answer": "2",
-      "subtopic": "Coordinate Geometry"
-    },
-    {
-      "id": "math2_q4",
-      "question": "If A = 3, B = 4, then hypotenuse = ?",
-      "options": ["5", "6", "7", "4"],
-      "answer": "5",
-      "subtopic": "Pythagoras Theorem"
-    },
-    {
-      "id": "math2_q5",
-      "question": "What is the expansion of (a + b)²?",
-      "options": ["a² + b²", "a² + 2ab + b²", "2ab", "a² - b²"],
-      "answer": "a² + 2ab + b²",
-      "subtopic": "Algebra"
-    },
-    {
-      "id": "math2_q6",
-      "question": "Solve: x² - 4x + 3 = 0",
-      "options": ["1 & 3", "2 & 3", "1 & 2", "3 & 4"],
-      "answer": "1 & 3",
-      "subtopic": "Quadratic Equations"
-    },
-    {
-      "id": "math2_q7",
-      "question": "Find the sum of AP: 2, 4, 6,... up to 10 terms",
-      "options": ["100", "120", "110", "55"],
-      "answer": "110",
-      "subtopic": "Progressions"
-    },
-    {
-      "id": "math2_q8",
-      "question": "What is the value of tan(45°)?",
-      "options": ["0", "1", "√3", "1/√3"],
-      "answer": "1",
-      "subtopic": "Trigonometry"
-    },
-    {
-      "id": "math2_q9",
-      "question": "How many sides does a hexagon have?",
-      "options": ["5", "6", "7", "8"],
-      "answer": "6",
-      "subtopic": "Geometry"
-    },
-    {
-      "id": "math2_q10",
-      "question": "Probability of getting head in coin toss?",
-      "options": ["0", "1", "1/2", "2"],
-      "answer": "1/2",
-      "subtopic": "Probability"
-    }
-  ],
-  "level3": [
-    {
-      "id": "math3_q1",
-      "question": "If f(x) = x², then f'(x) = ?",
-      "options": ["x", "2x", "x²", "1"],
-      "answer": "2x",
-      "subtopic": "Calculus"
-    },
-    {
-      "id": "math3_q2",
-      "question": "What is the value of lim(x→0) (sinx/x)?",
-      "options": ["1", "0", "∞", "x"],
-      "answer": "1",
-      "subtopic": "Limits"
-    },
-    {
-      "id": "math3_q3",
-      "question": "What is det([[1, 2], [3, 4]])?",
-      "options": ["-2", "2", "-5", "5"],
-      "answer": "-2",
-      "subtopic": "Matrices"
-    },
-    {
-      "id": "math3_q4",
-      "question": "If log₁₀(100) = ?",
-      "options": ["1", "2", "3", "10"],
-      "answer": "2",
-      "subtopic": "Logarithms"
-    },
-    {
-      "id": "math3_q5",
-      "question": "Solve for x: 2^x = 8",
-      "options": ["2", "3", "4", "5"],
-      "answer": "3",
-      "subtopic": "Exponents"
-    },
-    {
-      "id": "math3_q6",
-      "question": "C(5, 2) = ?",
-      "options": ["5", "10", "20", "15"],
-      "answer": "10",
-      "subtopic": "Combinations"
-    },
-    {
-      "id": "math3_q7",
-      "question": "What is the modulus of -7?",
-      "options": ["7", "-7", "0", "1"],
-      "answer": "7",
-      "subtopic": "Absolute Value"
-    },
-    {
-      "id": "math3_q8",
-      "question": "If a = 5 and b = 2, find a mod b.",
-      "options": ["1", "2", "0", "3"],
-      "answer": "1",
-      "subtopic": "Modulus Arithmetic"
-    },
-    {
-      "id": "math3_q9",
-      "question": "Find the inverse of 2x + 3 = y",
-      "options": ["y = 2x - 3", "x = (y - 3)/2", "x = (y + 3)/2", "y = (x - 3)/2"],
-      "answer": "x = (y - 3)/2",
-      "subtopic": "Functions"
-    },
-    {
-      "id": "math3_q10",
-      "question": "A cube has how many faces?",
-      "options": ["4", "6", "8", "10"],
-      "answer": "6",
-      "subtopic": "3D Geometry"
-    }
-  ]
+  "Math": {
+    "1": [
+      {
+        "id": "math1_q1",
+        "question": "What is the value of √81?",
+        "options": ["7", "8", "9", "10"],
+        "answer": "9",
+        "subtopic": "Squares and Roots"
+      },
+      {
+        "id": "math1_q2",
+        "question": "What is the value of 5² + 3²?",
+        "options": ["25", "34", "35", "36"],
+        "answer": "34",
+        "subtopic": "Algebraic Identities"
+      },
+      {
+        "id": "math1_q3",
+        "question": "If x = 3, what is the value of x² + 2x?",
+        "options": ["15", "18", "21", "25"],
+        "answer": "15",
+        "subtopic": "Polynomials"
+      },
+      {
+        "id": "math1_q4",
+        "question": "Which number is an integer?",
+        "options": ["2.5", "-3", "√2", "1/2"],
+        "answer": "-3",
+        "subtopic": "Number System"
+      },
+      {
+        "id": "math1_q5",
+        "question": "What is the value of sin(90°)?",
+        "options": ["0", "1", "1/2", "√3/2"],
+        "answer": "1",
+        "subtopic": "Trigonometry"
+      },
+      {
+        "id": "math1_q6",
+        "question": "What is the formula of area of circle?",
+        "options": ["2πr", "πr²", "πd", "2πr²"],
+        "answer": "πr²",
+        "subtopic": "Mensuration"
+      },
+      {
+        "id": "math1_q7",
+        "question": "Find HCF of 12 and 18.",
+        "options": ["2", "3", "6", "12"],
+        "answer": "6",
+        "subtopic": "Real Numbers"
+      },
+      {
+        "id": "math1_q8",
+        "question": "What is 25% of 200?",
+        "options": ["25", "40", "50", "75"],
+        "answer": "50",
+        "subtopic": "Percentages"
+      },
+      {
+        "id": "math1_q9",
+        "question": "2x + 3 = 9. Find x.",
+        "options": ["1", "2", "3", "4"],
+        "answer": "3",
+        "subtopic": "Linear Equations"
+      },
+      {
+        "id": "math1_q10",
+        "question": "Which one is a prime number?",
+        "options": ["4", "9", "11", "15"],
+        "answer": "11",
+        "subtopic": "Number Theory"
+      }
+    ],
+    "2": [
+      {
+        "id": "math2_q1",
+        "question": "What is the derivative of sin(x)?",
+        "options": ["cos(x)", "-cos(x)", "-sin(x)", "tan(x)"],
+        "answer": "cos(x)",
+        "subtopic": "Differentiation"
+      },
+      {
+        "id": "math2_q2",
+        "question": "∫ x dx = ?",
+        "options": ["x", "x²/2", "x²", "x/2"],
+        "answer": "x²/2",
+        "subtopic": "Integration"
+      },
+      {
+        "id": "math2_q3",
+        "question": "Find the slope of line y = 2x + 3",
+        "options": ["2", "3", "1", "0"],
+        "answer": "2",
+        "subtopic": "Coordinate Geometry"
+      },
+      {
+        "id": "math2_q4",
+        "question": "If A = 3, B = 4, then hypotenuse = ?",
+        "options": ["5", "6", "7", "4"],
+        "answer": "5",
+        "subtopic": "Pythagoras Theorem"
+      },
+      {
+        "id": "math2_q5",
+        "question": "What is the expansion of (a + b)²?",
+        "options": ["a² + b²", "a² + 2ab + b²", "2ab", "a² - b²"],
+        "answer": "a² + 2ab + b²",
+        "subtopic": "Algebra"
+      },
+      {
+        "id": "math2_q6",
+        "question": "Solve: x² - 4x + 3 = 0",
+        "options": ["1 & 3", "2 & 3", "1 & 2", "3 & 4"],
+        "answer": "1 & 3",
+        "subtopic": "Quadratic Equations"
+      },
+      {
+        "id": "math2_q7",
+        "question": "Find the sum of AP: 2, 4, 6,... up to 10 terms",
+        "options": ["100", "120", "110", "55"],
+        "answer": "110",
+        "subtopic": "Progressions"
+      },
+      {
+        "id": "math2_q8",
+        "question": "What is the value of tan(45°)?",
+        "options": ["0", "1", "√3", "1/√3"],
+        "answer": "1",
+        "subtopic": "Trigonometry"
+      },
+      {
+        "id": "math2_q9",
+        "question": "How many sides does a hexagon have?",
+        "options": ["5", "6", "7", "8"],
+        "answer": "6",
+        "subtopic": "Geometry"
+      },
+      {
+        "id": "math2_q10",
+        "question": "Probability of getting head in coin toss?",
+        "options": ["0", "1", "1/2", "2"],
+        "answer": "1/2",
+        "subtopic": "Probability"
+      }
+    ],
+    "3": [
+      {
+        "id": "math3_q1",
+        "question": "If f(x) = x², then f'(x) = ?",
+        "options": ["x", "2x", "x²", "1"],
+        "answer": "2x",
+        "subtopic": "Calculus"
+      },
+      {
+        "id": "math3_q2",
+        "question": "What is the value of lim(x→0) (sinx/x)?",
+        "options": ["1", "0", "∞", "x"],
+        "answer": "1",
+        "subtopic": "Limits"
+      },
+      {
+        "id": "math3_q3",
+        "question": "What is det([[1, 2], [3, 4]])?",
+        "options": ["-2", "2", "-5", "5"],
+        "answer": "-2",
+        "subtopic": "Matrices"
+      },
+      {
+        "id": "math3_q4",
+        "question": "If log₁₀(100) = ?",
+        "options": ["1", "2", "3", "10"],
+        "answer": "2",
+        "subtopic": "Logarithms"
+      },
+      {
+        "id": "math3_q5",
+        "question": "Solve for x: 2^x = 8",
+        "options": ["2", "3", "4", "5"],
+        "answer": "3",
+        "subtopic": "Exponents"
+      },
+      {
+        "id": "math3_q6",
+        "question": "C(5, 2) = ?",
+        "options": ["5", "10", "20", "15"],
+        "answer": "10",
+        "subtopic": "Combinations"
+      },
+      {
+        "id": "math3_q7",
+        "question": "What is the modulus of -7?",
+        "options": ["7", "-7", "0", "1"],
+        "answer": "7",
+        "subtopic": "Absolute Value"
+      },
+      {
+        "id": "math3_q8",
+        "question": "If a = 5 and b = 2, find a mod b.",
+        "options": ["1", "2", "0", "3"],
+        "answer": "1",
+        "subtopic": "Modulus Arithmetic"
+      },
+      {
+        "id": "math3_q9",
+        "question": "Find the inverse of 2x + 3 = y",
+        "options": ["y = 2x - 3", "x = (y - 3)/2", "x = (y + 3)/2", "y = (x - 3)/2"],
+        "answer": "x = (y - 3)/2",
+        "subtopic": "Functions"
+      },
+      {
+        "id": "math3_q10",
+        "question": "A cube has how many faces?",
+        "options": ["4", "6", "8", "10"],
+        "answer": "6",
+        "subtopic": "3D Geometry"
+      }
+    ]
+  }
 }
