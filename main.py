@@ -75,17 +75,15 @@ async def ask_question(query: Query):
     except Exception as e:
         logger.error(f"Error in ask_question: {e}")
         raise HTTPException(status_code=500, detail=str(e))
-
 @app.post("/get_questions")
 async def get_questions(request: QuizRequest):
-    exam = request.exam.lower()
     subject = request.subject.lower()
-    level_key = f"level{request.level}"  # ✅ this matches your JSON format
+    level = str(request.level)
 
-    file_path = Path(f"exams/{exam}_{subject}.json")
+    file_path = Path(f"exams/{subject}.json")  # 🔁 No exam name needed here
 
     if not file_path.exists():
-        raise HTTPException(status_code=404, detail=f"Exam file '{file_path}' not found.")
+        raise HTTPException(status_code=404, detail=f"Subject file '{file_path}' not found.")
 
     try:
         with open(file_path, "r", encoding="utf-8") as f:
@@ -94,18 +92,17 @@ async def get_questions(request: QuizRequest):
         if subject not in data:
             raise HTTPException(status_code=404, detail=f"Subject '{subject}' not found in file.")
 
-        subject_data = data[subject]
-
-        if level_key not in subject_data:
-            raise HTTPException(status_code=404, detail=f"Level {request.level} not found in subject '{subject}'.")
+        if level not in data[subject]:
+            raise HTTPException(status_code=404, detail=f"Level {level} not found in subject '{subject}'.")
 
         return {
             "status": "success",
-            "exam": exam,
+            "exam": request.exam,
             "subject": subject,
-            "level": request.level,
-            "questions": subject_data[level_key]
+            "level": level,
+            "questions": data[subject][level]
         }
+
     except Exception as e:
         logger.error(f"Error loading questions: {e}")
-        raise HTTPException(status_code=500, detail="Failed to load questions from exam file.")
+        raise HTTPException(status_code=500, detail="Failed to load questions.")
