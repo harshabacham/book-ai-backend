@@ -1,6 +1,5 @@
 {
-  "Physics": {
-    "1": [
+    "level1": [
       {
         "id": "phy1_q1",
         "question": "What is the SI unit of force?",
@@ -72,7 +71,7 @@
         "subtopic": "Work, Power and Energy"
       }
     ],
-    "2": [
+    "level2": [
       {
         "id": "phy2_q1",
         "question": "Which law explains why passengers fall forward when a bus stops suddenly?",
@@ -144,7 +143,7 @@
         "subtopic": "Electrostatics"
       }
     ],
-    "3": [
+    "level3": [
       {
         "id": "phy3_q1",
         "question": "Which physical quantity has unit kg·m/s?",
@@ -217,4 +216,3 @@
       }
     ]
   }
-}
