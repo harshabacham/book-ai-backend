@@ -80,10 +80,10 @@ async def get_questions(request: QuizRequest):
     subject = request.subject.lower()
     level = str(request.level)
 
-    file_path = Path(f"exams/{subject}.json")  # 🔁 No exam name needed here
+    file_path = Path(f"exams/{subject}.json")
 
     if not file_path.exists():
-        raise HTTPException(status_code=404, detail=f"Subject file '{file_path}' not found.")
+        raise HTTPException(status_code=404, detail=f"File for subject '{subject}' not found.")
 
     try:
         with open(file_path, "r", encoding="utf-8") as f:
@@ -92,15 +92,17 @@ async def get_questions(request: QuizRequest):
         if subject not in data:
             raise HTTPException(status_code=404, detail=f"Subject '{subject}' not found in file.")
 
-        if level not in data[subject]:
-            raise HTTPException(status_code=404, detail=f"Level {level} not found in subject '{subject}'.")
+        subject_data = data[subject]
+
+        if level not in subject_data:
+            raise HTTPException(status_code=404, detail=f"Level '{level}' not found in subject '{subject}'.")
 
         return {
             "status": "success",
             "exam": request.exam,
             "subject": subject,
             "level": level,
-            "questions": data[subject][level]
+            "questions": subject_data[level]
         }
 
     except Exception as e:
